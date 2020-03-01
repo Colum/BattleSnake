@@ -19,6 +19,7 @@ def start():
 def move():
     # print(json.dumps(bottle.request.json, indent=2))
     move = controller(bottle.request.json)
+    print(bottle.request.json)
     return {'move': move}
 
 
