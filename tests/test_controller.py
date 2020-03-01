@@ -1,4 +1,4 @@
-from src.controller import Direction, get_move_direction, get_possible_moves, get_position_vector, get_food_positions
+from src.controller import Direction, get_move_direction, get_possible_moves, get_position_vector, get_food_positions, could_kill_enemy
 import numpy as np
 
 
@@ -93,3 +93,88 @@ def test_get_food_positions():
     expected_food_positions = np.array([[3, 1], [6, 3], [9, 5]])
     print(expected_food_positions)
     assert np.array_equal(expected_food_positions, food_positions)
+
+def test_could_attack():
+    data = {
+        "board": {
+            "height": 11,
+            "width": 11,
+            "snakes": [
+                {
+                    "id": "gs_6kRDgWTKdVKBKY4mGStVtPq9",
+                    "name": "colum / enemy",
+                    "health": 70,
+                    "body": [
+                        {
+                            "x": 3,
+                            "y": 4
+
+                        },
+                        {
+                            "x": 4,
+                            "y": 4
+
+                        },
+                    ],
+                    "shout": ""
+
+                },
+                {
+                    "id": "gs_qr6Y7B3Dyd6b6cKQpKKqW7mH",
+                    "name": "colum / snake1",
+                    "health": 100,
+                    "body": [
+                        {
+                            "x": 9,
+                            "y": 6
+
+                        },
+                        {
+                            "x": 9,
+                            "y": 7
+
+                        },
+                        {
+                            "x": 9,
+                            "y": 8
+                        }
+                    ],
+                    "shout": ""
+
+                }
+
+            ]
+
+        },
+        "you": {
+            "id": "gs_qr6Y7B3Dyd6b6cKQpKKqW7mH",
+            "name": "colum / snake1",
+            "health": 100,
+            "body": [
+                {
+                    "x": 6,
+                    "y": 7
+
+                },
+                {
+                    "x": 9,
+                    "y": 7
+
+                },
+                {
+                    "x": 9,
+                    "y": 9
+                }
+            ],
+            "shout": ""
+
+        }
+    }
+    my_snake = data['you']
+    my_body = my_snake['body']
+    my_head = get_position_vector(my_body[0])
+    height = data['board']['height']
+    width = data['board']['width']
+    snakes = data['board']['snakes']
+
+    could_kill_enemy(snakes, my_head, height, width, len(my_body))

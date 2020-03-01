@@ -74,6 +74,27 @@ def get_possible_moves(width, height, position, snakes):
 
     return possible_moves
 
+def get_available_next_locations(width, height, position, snakes):
+    occupied_positions = get_occupied_positions(snakes)
+
+    up = numpy.add(position, [0, -1])
+    down = numpy.add(position, [0, 1])
+    left = numpy.add(position, [-1, 0])
+    right = numpy.add(position, [1, 0])
+
+    possible_moves = []
+
+    if is_unoccupied(up, occupied_positions) and up[1] > -1:
+        possible_moves.append(up)
+    if is_unoccupied(down, occupied_positions) and down[1] < height:
+        possible_moves.append(down)
+    if is_unoccupied(left, occupied_positions) and left[0] > -1:
+        possible_moves.append(left)
+    if is_unoccupied(right, occupied_positions) and right[0] < width:
+        possible_moves.append(right)
+
+    return possible_moves
+
 
 def get_food_positions(food_list):
     food_positions = [get_position_vector(food) for food in food_list]
@@ -111,6 +132,27 @@ def go_to_closest_food(graph, body, food):
     # no paths to food
     return None
 
+def get_enemy_snakes(snakes):
+    enemies = []
+    for snake in snakes:
+        if snake["name"] in ["colum / snake1"]:
+            continue
+        enemies.append(snake)
+    return enemies
+
+def could_kill_enemy(snakes, my_head, height, width, my_len):
+    enemies = get_enemy_snakes(snakes)
+    for enemy in enemies:
+        if len(enemy['body']) >= my_len:
+            continue
+
+        # todo find current direction and factor it in get_available_next_locations
+        my_next_moves = get_available_next_locations(width, height, my_head, snakes)
+        enemy_head = get_position_vector(enemy['body'][0])
+        their_next_move = get_available_next_locations(width, height, enemy_head, snakes)
+        a = 4
+
+
 
 def determine_move(data):
     turn = data['turn']
@@ -133,7 +175,8 @@ def determine_move(data):
         'height': height
     }
 
-    # chase tail
+    attack = could_kill_enemy(snakes, my_head, height, width, len(my_body))
+
     if len(my_body) > 7 and 50 < my_health < 100:
         move = chase_tail(graph, my_body)
         if move:
