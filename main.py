@@ -24,7 +24,7 @@ def move():
 
 @bottle.post('/end')
 def end():
-    print(json.dumps(bottle.request.json, indent=2))
+    #print(json.dumps(bottle.request.json, indent=2))
     return 'end'
 
 
