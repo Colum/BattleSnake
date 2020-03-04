@@ -74,7 +74,7 @@ def get_possible_moves(width, height, position, snakes):
 
     return possible_moves
 
-def get_available_next_locations(width, height, position, snakes):
+def get_available_next_locations(width, height, position, snakes, direction):
     occupied_positions = get_occupied_positions(snakes)
 
     up = numpy.add(position, [0, -1])
@@ -84,14 +84,14 @@ def get_available_next_locations(width, height, position, snakes):
 
     possible_moves = []
 
-    if is_unoccupied(up, occupied_positions) and up[1] > -1:
-        possible_moves.append(up)
-    if is_unoccupied(down, occupied_positions) and down[1] < height:
-        possible_moves.append(down)
-    if is_unoccupied(left, occupied_positions) and left[0] > -1:
-        possible_moves.append(left)
-    if is_unoccupied(right, occupied_positions) and right[0] < width:
-        possible_moves.append(right)
+    if is_unoccupied(up, occupied_positions) and up[1] > -1 and direction is not Direction.DOWN:
+        possible_moves.append((up, Direction.UP))
+    if is_unoccupied(down, occupied_positions) and down[1] < height and direction is not Direction.UP:
+        possible_moves.append((down, Direction.DOWN))
+    if is_unoccupied(left, occupied_positions) and left[0] > -1 and direction is not Direction.RIGHT:
+        possible_moves.append((left, Direction.LEFT))
+    if is_unoccupied(right, occupied_positions) and right[0] < width and direction is not Direction.LEFT:
+        possible_moves.append((right, Direction.RIGHT))
 
     return possible_moves
 
@@ -107,6 +107,7 @@ def get_closest_food_positions(position, food_positions):
 '''
 path finding functions
 '''
+
 
 def chase_tail(graph, body):
     head = get_position_vector(body[0])
@@ -132,6 +133,7 @@ def go_to_closest_food(graph, body, food):
     # no paths to food
     return None
 
+
 def get_enemy_snakes(snakes):
     enemies = []
     for snake in snakes:
@@ -140,17 +142,42 @@ def get_enemy_snakes(snakes):
         enemies.append(snake)
     return enemies
 
-def could_kill_enemy(snakes, my_head, height, width, my_len):
+
+def get_direction(head, neck):
+    if head['x'] == neck['x']:
+        if head['y'] > neck['y']:
+            return Direction.DOWN
+        else:
+            return Direction.UP
+    if head['y'] == neck['y']:
+        if head['x'] > neck['x']:
+            return Direction.RIGHT
+        return Direction.LEFT
+
+
+def could_kill_enemy(snakes, my_body, height, width, my_len):
     enemies = get_enemy_snakes(snakes)
     for enemy in enemies:
         if len(enemy['body']) >= my_len:
             continue
 
-        # todo find current direction and factor it in get_available_next_locations
-        my_next_moves = get_available_next_locations(width, height, my_head, snakes)
-        enemy_head = get_position_vector(enemy['body'][0])
-        their_next_move = get_available_next_locations(width, height, enemy_head, snakes)
-        a = 4
+        my_head = my_body[0]
+        my_neck = my_body[1]
+        my_direction = get_direction(my_head, my_neck)
+        my_head = get_position_vector(my_head)
+        my_next_moves = get_available_next_locations(width, height, my_head, snakes, my_direction)
+
+        enemy_head = enemy['body'][0]
+        enemy_neck = enemy['body'][1]
+        enemy_direction = get_direction(enemy_head, enemy_neck)
+        enemy_head = get_position_vector(enemy_head)
+        enemy_next_move = get_available_next_locations(width, height, enemy_head, snakes, enemy_direction)
+        for my_move, my_direction in my_next_moves:
+            for enemy_move, enemy_direction in enemy_next_move:
+                if numpy.equal(my_move, enemy_move):
+                    return my_direction
+        return None
+
 
 
 
@@ -175,7 +202,9 @@ def determine_move(data):
         'height': height
     }
 
-    attack = could_kill_enemy(snakes, my_head, height, width, len(my_body))
+    attack = could_kill_enemy(snakes, my_body, height, width, len(my_body))
+    if attack:
+        return attack
 
     if len(my_body) > 7 and 50 < my_health < 100:
         move = chase_tail(graph, my_body)

@@ -152,8 +152,8 @@ def test_could_attack():
             "health": 100,
             "body": [
                 {
-                    "x": 6,
-                    "y": 7
+                    "x": 9,
+                    "y": 6
 
                 },
                 {
@@ -163,7 +163,7 @@ def test_could_attack():
                 },
                 {
                     "x": 9,
-                    "y": 9
+                    "y": 8
                 }
             ],
             "shout": ""
@@ -172,9 +172,8 @@ def test_could_attack():
     }
     my_snake = data['you']
     my_body = my_snake['body']
-    my_head = get_position_vector(my_body[0])
     height = data['board']['height']
     width = data['board']['width']
     snakes = data['board']['snakes']
 
-    could_kill_enemy(snakes, my_head, height, width, len(my_body))
+    could_kill_enemy(snakes, my_body, height, width, len(my_body))

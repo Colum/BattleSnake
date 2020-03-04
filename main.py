@@ -8,7 +8,7 @@ import os
 def start():
     # print(json.dumps(bottle.request.json, indent=2))
     snake_config = {
-        'color': '#43E5DF',
+        'color': '#000000',
         'headType': 'tongue',
         'tailType': 'pixel'
     }
