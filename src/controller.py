@@ -174,8 +174,9 @@ def could_kill_enemy(snakes, my_body, height, width, my_len):
         enemy_next_move = get_available_next_locations(width, height, enemy_head, snakes, enemy_direction)
         for my_move, my_direction in my_next_moves:
             for enemy_move, enemy_direction in enemy_next_move:
-                if numpy.equal(my_move, enemy_move):
-                    return my_direction
+                if my_move[0] == enemy_move[0]:
+                    if enemy_move[1] == enemy_move[1]:
+                        return my_direction
         return None
 
 
