@@ -106,13 +106,13 @@ def test_could_attack():
                     "health": 70,
                     "body": [
                         {
-                            "x": 3,
-                            "y": 4
+                            "x": 5,
+                            "y": 5
 
                         },
                         {
-                            "x": 4,
-                            "y": 4
+                            "x": 5,
+                            "y": 6
 
                         },
                     ],
@@ -125,17 +125,17 @@ def test_could_attack():
                     "health": 100,
                     "body": [
                         {
-                            "x": 9,
+                            "x": 4,
                             "y": 6
 
                         },
                         {
-                            "x": 9,
+                            "x": 4,
                             "y": 7
 
                         },
                         {
-                            "x": 9,
+                            "x": 4,
                             "y": 8
                         }
                     ],
@@ -152,17 +152,17 @@ def test_could_attack():
             "health": 100,
             "body": [
                 {
-                    "x": 9,
+                    "x": 4,
                     "y": 6
 
                 },
                 {
-                    "x": 9,
+                    "x": 4,
                     "y": 7
 
                 },
                 {
-                    "x": 9,
+                    "x": 4,
                     "y": 8
                 }
             ],
@@ -176,4 +176,5 @@ def test_could_attack():
     width = data['board']['width']
     snakes = data['board']['snakes']
 
-    could_kill_enemy(snakes, my_body, height, width, len(my_body))
+    res = could_kill_enemy(snakes, my_body, height, width, len(my_body))
+    a = 4

@@ -176,7 +176,7 @@ def could_kill_enemy(snakes, my_body, height, width, my_len):
             for enemy_move, enemy_direction in enemy_next_move:
                 if my_move[0] == enemy_move[0]:
                     if enemy_move[1] == enemy_move[1]:
-                        return my_direction
+                        return my_direction.value
         return None
 
 
@@ -206,7 +206,7 @@ def determine_move(data):
     attack = could_kill_enemy(snakes, my_body, height, width, len(my_body))
     if attack:
         print("ATTACK!")
-        return attack.value
+        return attack
 
     if len(my_body) > 10 and 50 < my_health < 100:
         move = chase_tail(graph, my_body)  # todo go a random way
